@@ -16,25 +16,27 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Debug folder structure
+      - name: Debug structure
         run: ls -R .
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 18
 
       - name: Install dependencies
         run: npm install
+        working-directory: "MediOrder Online Medicine System"
 
       - name: Build project
         run: npm run build
+        working-directory: "MediOrder Online Medicine System"
 
-      - name: Upload build artifact (dist folder)
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: built-frontend
-          path: dist
+          path: MediOrder Online Medicine System/dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -59,6 +61,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'medicinemediorder'
-          slot-name: 'Production'
+          app-name: "medicinemediorder"
+          slot-name: "Production"
           package: .
