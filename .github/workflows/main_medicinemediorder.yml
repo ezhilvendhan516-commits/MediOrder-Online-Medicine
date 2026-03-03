@@ -13,7 +13,11 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Debug folder structure
+        run: ls -R .
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -23,14 +27,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project (Vite)
+      - name: Build project
         run: npm run build
 
-      - name: Upload build artifact
+      - name: Upload build artifact (dist folder)
         uses: actions/upload-artifact@v4
         with:
           name: built-frontend
-          path: dist  # upload ONLY the final static site
+          path: dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -40,7 +44,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Download artifact
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: built-frontend
@@ -48,13 +52,13 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_89906FDC87844E94BC93AF8B7ED59C7E }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3C69F9156E4C433DAFC51D21CB2E25A0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_FD571267C4914C52BB33646F1AA8A794 }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'medicinemediorder'
           slot-name: 'Production'
-          package: ./  # deploy the dist/ folder contents
+          package: .
